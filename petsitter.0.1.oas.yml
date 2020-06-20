@@ -1,0 +1,486 @@
+openapi: 3.0.0
+info:
+  title: Pet Sitter Service
+  version: "1.2"
+servers:
+  - url: 'http://localhost:8080'
+tags: 
+- name: Users
+- name: Jobs
+paths:
+  /users:
+    post:
+      tags:
+      - Users
+      summary: Register User Account
+      operationId: post_users
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          headers:
+            Location:
+              schema:
+                type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+  '/users/{id}':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    get:
+      tags:
+      - Users
+      summary: Get User Information
+      security: 
+      - SimpleToken: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+      operationId: get_users_id
+    put:
+      tags:
+      - Users
+      security: 
+      - SimpleToken: []
+      summary: Update User Account
+      operationId: put_users_id
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+    delete:
+      tags:
+      - Users
+      security: 
+      - SimpleToken: []
+      summary: Delete User Account
+      operationId: delete_users_id
+      responses:
+        '204':
+          description: No Content
+  /users/{id}/jobs:
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    get:
+      tags:
+      - Jobs
+      - Users
+      security: 
+      - SimpleToken: []
+      description: |
+        - **TODO** Find out about returing arrays directly (without being wrapped in an envelope).
+      summary: Get a list of Jobs that are associated with this user.
+      operationId: get_jobs_for_user
+      responses:
+        '200':
+          description: A list of jobs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Job'
+  /users/{id}/job-applications:
+      parameters:
+        - schema:
+            type: string
+          name: id
+          in: path
+          required: true
+      get:
+        tags:
+        - Jobs
+        - Users
+        security: 
+        - SimpleToken: []
+        summary: Get a list of Job Applications that are associated with this user.
+        operationId: get_job_applications_for_user
+        responses:
+          '200':
+            description: A list of jobs
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/JobApplication'
+  /jobs:
+    post:
+      tags:
+      - Jobs
+      security: 
+      - SimpleToken: []
+      summary: Post new Job
+      operationId: post_jobs
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+          headers:
+            Location:
+              schema:
+                type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Job'
+    get:
+      summary: List available jobs
+      operationId: get_jobs
+      security: 
+      - SimpleToken: []
+      tags:
+      - Jobs
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Job'
+                  total_items:
+                    type: integer
+                    description: 'The total number of items, regardless of how many this response includes.'
+                  has_more:
+                    type: boolean
+                    description: Indicates that more items are available and can be retrieved with different offset and limit parameters.
+      parameters:
+        - schema:
+            type: integer
+            default: 20
+            maximum: 50
+            minimum: 0
+          in: query
+          name: limit
+          description: Limits the number of results the endpoint returns.
+        - schema:
+            type: integer
+            default: 0
+          in: query
+          name: offset
+          description: Skips these many items from the response.
+  '/jobs/{id}':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    get:
+      summary: Get Job Details
+      tags:
+      - Jobs
+      security: 
+      - SimpleToken: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+      operationId: get_jobs_id
+    put:
+      tags:
+      - Jobs
+      summary: Update Job Details
+      operationId: put_jobs_id
+      security: 
+      - SimpleToken: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Job'
+    delete:
+      tags:
+      - Jobs
+      security: 
+      - SimpleToken: []
+      summary: Remove Job
+      operationId: delete_jobs_id
+      responses:
+        '204':
+          description: No Content
+  '/jobs/{id}/job-applications':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    post:
+      summary: Create a job application
+      operationId: create_job_application
+      security: 
+      - SimpleToken: []
+      tags:
+      - Jobs
+      responses:
+        '200':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobApplication'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JobApplication'
+    get:
+      summary: Get all applications for this job.
+      operationId: get_applications_by_job_id
+      security: 
+      - SimpleToken: []
+      tags:
+      - Jobs
+      parameters: 
+      - name: 'job_id'
+        schema:
+          type: string
+        in: query
+        description: Applications that belong to this *Job*
+        example: '1234'
+      - name: 'user_id'
+        schema:
+          type: string
+        in: query
+        description: |
+          Applications that belong to this user (either: *PetSitter*, *PetOwner* or *Admin*)
+        example: '1234'
+      responses:
+        '200':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/JobApplication'
+              
+            
+  '/job-applications/{id}':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    put:
+      tags:
+      - Jobs
+      security: 
+      - SimpleToken: []
+      summary: Update application details
+      operationId: update_job_application
+      requestBody:
+        description: Update the application details
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JobApplication'
+      
+      responses:
+        '200':
+          description: Job Application details
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/JobApplication'
+    delete:
+      summary: Delete application
+      operationId: delete_job_application
+      security: 
+      - SimpleToken: []
+      tags:
+      - Jobs
+      responses:
+        '204':
+          description: Job application details
+          
+       
+components:
+  schemas:
+    JobApplication:
+      title: JobApplication
+      type: object
+      properties:
+        id: 
+          type: string
+          description: Job application id.
+          readOnly: true
+        user_id:
+          type: string
+          description: Id of user requesting job
+          readOnly: true
+        job_id:
+          type: string
+          description: Job id
+          readOnly: true
+        status:
+          type: string
+          default: APPLYING
+          enum:
+          - APPLYING
+          - DENIED
+    User:
+      title: User
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+        full_name:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        roles:
+          type: array
+          minLength: 1
+          items:
+            type: string
+            enum:
+              - PetOwner
+              - PetSitter
+              - Admin
+      required:
+        - email
+        - full_name
+        - roles
+  
+    Job:
+      title: Job
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+        creator_user_id:
+          type: string
+          description: The user who posted this job.
+          readOnly: true
+        worker_user_id:
+          type: string
+          nullable: true
+          description: 'When the job is open, null. When the job is filled, the user who is working on it.'
+          readOnly: true
+        applications:
+          type: array
+          items:
+            $ref: '#/components/schemas/JobApplication'
+        starts_at:
+          type: string
+          format: date-time
+          description: The date and time when this job starts.
+        ends_at:
+          type: string
+          format: date-time
+          description: The date and time when this job ends.
+        dog:
+          type: object
+          properties:
+            name:
+              type: string
+            size:
+              type: string
+              enum:
+                - small
+                - medium
+                - large
+            years_old:
+              type: integer
+            breed:
+              type: string
+          required:
+            - size
+            - years_old
+            - breed
+        activities:
+          type: array
+          minLength: 1
+          items:
+            type: string
+            enum:
+              - walk
+              - dropin
+              - boarding
+              - sitting
+              - daycare
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        description:
+          type: string
+      required:
+        - starts_at
+        - ends_at
+        - activities
+        - description
+        
+  securitySchemes:
+    SimpleToken:
+      type: http
+      scheme: basic
+      description: Use the `email`:`password` as the Basic Auth
