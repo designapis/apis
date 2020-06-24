@@ -234,16 +234,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Job'
-    delete:
-      tags:
-      - Jobs
-      security: 
-      - SimpleToken: []
-      summary: Remove Job
-      operationId: delete_jobs_id
-      responses:
-        '204':
-          description: No Content      
   '/jobs/{id}/job-applications':
     parameters:
       - schema:
