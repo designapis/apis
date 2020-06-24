@@ -4,7 +4,7 @@ info:
   version: "0.0.0"
 servers:
   - url: 'http://localhost:8080'
-tags: 
+tags:
 - name: Users
 - name: Jobs
 paths:
@@ -41,7 +41,7 @@ paths:
       tags:
       - Users
       summary: Get User Information
-      security: 
+      security:
       - SimpleToken: []
       responses:
         '200':
@@ -54,7 +54,7 @@ paths:
     put:
       tags:
       - Users
-      security: 
+      security:
       - SimpleToken: []
       summary: Update User Account
       operationId: put_users_id
@@ -73,7 +73,7 @@ paths:
     delete:
       tags:
       - Users
-      security: 
+      security:
       - SimpleToken: []
       summary: Delete User Account
       operationId: delete_users_id
@@ -91,7 +91,7 @@ paths:
       tags:
       - Jobs
       - Users
-      security: 
+      security:
       - SimpleToken: []
       description: |
         - **TODO** Find out about returing arrays directly (without being wrapped in an envelope).
@@ -117,7 +117,7 @@ paths:
         tags:
         - Jobs
         - Users
-        security: 
+        security:
         - SimpleToken: []
         summary: Get a list of Job Applications that are associated with this user.
         operationId: get_job_applications_for_user
@@ -134,7 +134,7 @@ paths:
     post:
       tags:
       - Jobs
-      security: 
+      security:
       - SimpleToken: []
       summary: Post new Job
       operationId: post_jobs
@@ -157,7 +157,7 @@ paths:
     get:
       summary: List available jobs
       operationId: get_jobs
-      security: 
+      security:
       - SimpleToken: []
       tags:
       - Jobs
@@ -205,7 +205,7 @@ paths:
       summary: Get Job Details
       tags:
       - Jobs
-      security: 
+      security:
       - SimpleToken: []
       responses:
         '200':
@@ -220,7 +220,7 @@ paths:
       - Jobs
       summary: Update Job Details
       operationId: put_jobs_id
-      security: 
+      security:
       - SimpleToken: []
       responses:
         '200':
@@ -244,7 +244,7 @@ paths:
     post:
       summary: Create a job application
       operationId: create_job_application
-      security: 
+      security:
       - SimpleToken: []
       tags:
       - Jobs
@@ -263,11 +263,11 @@ paths:
     get:
       summary: Get all applications for this job.
       operationId: get_applications_by_job_id
-      security: 
+      security:
       - SimpleToken: []
       tags:
       - Jobs
-      parameters: 
+      parameters:
       - name: 'job_id'
         schema:
           type: string
@@ -290,8 +290,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/JobApplication'
-              
-            
+
+
   '/job-applications/{id}':
     parameters:
       - schema:
@@ -302,7 +302,7 @@ paths:
     put:
       tags:
       - Jobs
-      security: 
+      security:
       - SimpleToken: []
       summary: Update application details
       operationId: update_job_application
@@ -312,7 +312,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/JobApplication'
-      
+
       responses:
         '200':
           description: Job Application details
@@ -325,22 +325,22 @@ paths:
     delete:
       summary: Delete application
       operationId: delete_job_application
-      security: 
+      security:
       - SimpleToken: []
       tags:
       - Jobs
       responses:
         '204':
           description: Job application details
-          
-       
+
+
 components:
   schemas:
     JobApplication:
       title: JobApplication
       type: object
       properties:
-        id: 
+        id:
           type: string
           description: Job application id.
           readOnly: true
@@ -394,7 +394,7 @@ components:
         - email
         - full_name
         - roles
-  
+
     Job:
       title: Job
       type: object
@@ -468,7 +468,7 @@ components:
         - ends_at
         - activities
         - description
-        
+
   securitySchemes:
     SimpleToken:
       type: http
